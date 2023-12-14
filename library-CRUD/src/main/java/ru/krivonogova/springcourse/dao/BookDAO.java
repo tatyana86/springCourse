@@ -29,12 +29,12 @@ private final JdbcTemplate jdbcTemplate;
     }
     
     public void save(Book book) {
-        jdbcTemplate.update("INSERT INTO Book(name, autor, age) VALUES(?, ?, ?)", book.getName(), book.getAuthor(), book.getAge());
+        jdbcTemplate.update("INSERT INTO Book(title, author, year) VALUES(?, ?, ?)", book.getTitle(), book.getAuthor(), book.getYear());
     }
 
     public void update(int id, Book updatedBook) {
-        jdbcTemplate.update("UPDATE Book SET name=?, author=?, age=? WHERE id=?", updatedBook.getName(), updatedBook.getAuthor(),
-                updatedBook.getAge(), id);
+        jdbcTemplate.update("UPDATE Book SET title=?, author=?, year=? WHERE id=?", updatedBook.getTitle(), updatedBook.getAuthor(),
+                updatedBook.getYear(), id);
     }
 
     public void delete(int id) {

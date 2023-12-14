@@ -64,7 +64,8 @@ public class PeopleController {
     public String update(@ModelAttribute("person") @Valid Person person, 
     		BindingResult bindingResult,
     		@PathVariable("id") int id) {
-    	personValidator.validate(person, bindingResult);
+    	// если имя изменилось, то проверить, нет ли такого имени в БД
+    	//personValidator.validate(person, bindingResult);
     	
     	if(bindingResult.hasErrors()) {
     		return "people/edit";

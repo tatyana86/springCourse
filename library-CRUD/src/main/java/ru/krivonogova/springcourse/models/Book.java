@@ -3,30 +3,30 @@ package ru.krivonogova.springcourse.models;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class Book {
     private int id;
     
-	@NotEmpty(message = "Name should not be empty")
-    private String name;
+	@Pattern(regexp = "[А-ЯЁ][а-яё]+")
+    private String title;
     
-	@NotEmpty(message = "Name should not be empty")
-	@Pattern(regexp = "[A-Z]\\w+ [A-Z]\\w+ [A-Z]\\\\w+", message =  "TODO")
+	@NotEmpty(message = "Автор не должен быть пустым")
+    @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
 	
-	@Min(value = 1910, message = "TODO")
-	@Pattern(regexp = "\\d{4}", message =  "TODO")
-    private int age;
+    @Min(value = 1500, message = "Год должен быть больше, чем 1500")
+    private int year;
 	
     
     public Book() {
 	}
 
-    public Book(int id, String name, String author, int age) {
+    public Book(int id, String title, String author, int year) {
 		this.id = id;
-		this.name = name;
+		this.title = title;
 		this.author = author;
-		this.age = age;
+		this.year = year;
 	}
 
 	public int getId() {
@@ -37,12 +37,12 @@ public class Book {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 	public String getAuthor() {
@@ -53,11 +53,11 @@ public class Book {
 		this.author = author;
 	}
 
-	public int getAge() {
-		return age;
+	public int getYear() {
+		return year;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setYear(int year) {
+		this.year = year;
 	}
 }
