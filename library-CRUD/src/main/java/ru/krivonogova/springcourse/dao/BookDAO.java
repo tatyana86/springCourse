@@ -1,6 +1,7 @@
 package ru.krivonogova.springcourse.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -8,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ru.krivonogova.springcourse.models.Book;
+import ru.krivonogova.springcourse.models.Person;
 
 @Component
 public class BookDAO {
@@ -39,5 +41,21 @@ private final JdbcTemplate jdbcTemplate;
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Book WHERE id=?", id);
+    }
+    
+    public Optional<Person> getOwner(int id) {
+        return jdbcTemplate.query("SELECT Person.* FROM Book JOIN Person ON Book.person_id = Person.id WHERE Book.id=?", 
+        		new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
+                .stream().findAny();
+    }
+    
+    // выдача книги
+    public void assign(int id, Person selectedPerson) {
+        jdbcTemplate.update("UPDATE Book SET person_id=? WHERE id=?", selectedPerson.getId(), id);
+    }
+    
+    // возврат книги
+    public void release(int id) {
+        jdbcTemplate.update("UPDATE Book SET person_id=NULL WHERE id=?", id);
     }
 }
