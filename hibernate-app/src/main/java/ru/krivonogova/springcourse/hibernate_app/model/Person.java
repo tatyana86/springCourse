@@ -5,7 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(name="Person")
@@ -22,10 +26,13 @@ public class Person {
     @Column(name = "age")
     private int age;
     
+    @OneToOne(mappedBy = "person")    
+    @Cascade(CascadeType.SAVE_UPDATE)
+    private Passport passport;
+    
     public Person() {}
 
 	public Person(String name, int age) {
-		this.id = id;
 		this.name = name;
 		this.age = age;
 	}
@@ -53,4 +60,20 @@ public class Person {
 	public void setAge(int age) {
 		this.age = age;
 	}
+
+	@Override
+	public String toString() {
+		return "Person [name=" + name + ", age=" + age + "]";
+	}
+
+	public Passport getPassport() {
+		return passport;
+	}
+
+	public void setPassport(Passport passport) {
+		this.passport = passport;
+		passport.setPerson(this);
+	}
+	
+	
 }
