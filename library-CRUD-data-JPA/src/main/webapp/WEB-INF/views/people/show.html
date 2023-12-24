@@ -18,7 +18,6 @@
     <table th:each="book : ${books}">
         <tr th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">book</tr>
     </table>
-	
 </div>
 
 <hr/>

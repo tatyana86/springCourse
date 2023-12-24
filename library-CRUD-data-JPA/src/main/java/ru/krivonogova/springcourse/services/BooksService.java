@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +24,29 @@ public class BooksService {
 		this.booksRepository = booksRepository;
 	}
 	
-	public List<Book> findAll() {
+	public List<Book> findAll(boolean isSortedByYear) {
+		if(isSortedByYear) {
+			return booksRepository.findAll(Sort.by("year"));
+		}
+		
 		return booksRepository.findAll();
+	}
+	
+	public List<Book> findAll(Integer page, Integer totalPage, boolean isSortedByYear) {
+		if(isSortedByYear) {
+			return booksRepository.findAll(PageRequest.of(page, totalPage, Sort.by("year"))).getContent();
+		}
+		
+		return booksRepository.findAll(PageRequest.of(page, totalPage)).getContent();
 	}
 	
 	public Book findOne(int id) {
 		Optional<Book> foundBook = booksRepository.findById(id);
 		return foundBook.orElse(null);
+	}
+	
+	public List<Book> searchByTytle(String query) {
+		return booksRepository.findByTitleStartingWith(query);
 	}
 	
 	@Transactional

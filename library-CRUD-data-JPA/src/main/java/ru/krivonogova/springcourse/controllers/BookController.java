@@ -28,8 +28,16 @@ public class BookController {
 	}
 	
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String index(@RequestParam(value = "page", required = false) Integer page,
+    					@RequestParam(value = "totalPage", required = false) Integer totalPage,
+    					@RequestParam(value = "isSortedByYear", required = false) boolean isSortedByYear,
+    					Model model) {
+    	if(page == null || totalPage == null) {
+    		model.addAttribute("books", booksService.findAll(isSortedByYear));
+    	} 
+    	else {
+    		model.addAttribute("books", booksService.findAll(page, totalPage, isSortedByYear));
+    	}
         return "books/index";
     }
     
@@ -50,6 +58,19 @@ public class BookController {
 	@GetMapping("/new")
 	public String newBook(@ModelAttribute("book") Book book) {
 		return "books/new";
+	}
+	
+    @GetMapping("/search")
+    public String searchPage() {
+        return "books/search";
+    }
+	
+	@PostMapping("/search")
+	public String searchByTitle(Model model, @RequestParam("query") String query) {
+		
+		model.addAttribute("books", booksService.searchByTytle(query));
+		
+		return "books/search";
 	}
 	
     @PostMapping
