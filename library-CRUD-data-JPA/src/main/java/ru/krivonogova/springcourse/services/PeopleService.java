@@ -1,5 +1,6 @@
 package ru.krivonogova.springcourse.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +31,22 @@ public class PeopleService {
 	
 	public List<Book> getBooksById(int id) {
 		Optional<Person> person = peopleRepository.findById(id);
-		Hibernate.initialize(person.get().getBooks());
-		return person.get().getBooks();
+		
+		List<Book> books = person.get().getBooks();
+		
+		if(person.isPresent()) {
+			Hibernate.initialize(person.get().getBooks());
+			
+			for(Book book : books) {
+				long timeOfDiffer = Math.abs(book.getTakedAt().getTime() - new Date().getTime());
+				long MILSEC_IN_10_DAYS = 10 * 24 * 3600 * 1000;
+				if(timeOfDiffer > MILSEC_IN_10_DAYS) {
+					book.setOverdue(true);
+				}
+			}
+		}
+		
+		return books;
 	}
 	
 	public Person findOne(int id) {

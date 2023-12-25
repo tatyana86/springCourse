@@ -1,5 +1,6 @@
 package ru.krivonogova.springcourse.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,8 @@ public class BooksService {
 	@Transactional
 	public void update(int id, Book updatedBook) {
 		updatedBook.setId(id);
+		updatedBook.setTakedAt(new Date());
+		updatedBook.setOwner(booksRepository.getOne(id).getOwner());
 		booksRepository.save(updatedBook);
 	}
 	
@@ -77,6 +80,7 @@ public class BooksService {
 	@Transactional
 	public void assign(int id, Person selectedPerson) {
 		booksRepository.getOne(id).setOwner(selectedPerson);
+		booksRepository.getOne(id).setTakedAt(new Date());
 		booksRepository.save(booksRepository.getOne(id));
 	}
 	
@@ -84,6 +88,7 @@ public class BooksService {
 	@Transactional
 	public void release(int id) {
 		booksRepository.getOne(id).setOwner(null);
+		booksRepository.getOne(id).setTakedAt(null);
 		booksRepository.save(booksRepository.getOne(id));
 	}
 	

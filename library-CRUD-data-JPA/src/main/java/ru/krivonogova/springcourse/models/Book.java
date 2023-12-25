@@ -1,5 +1,7 @@
 package ru.krivonogova.springcourse.models;
 
+import java.util.Date;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -14,9 +16,15 @@ public class Book {
 	@ManyToOne
 	@JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
+	
+	@Column(name = "takedAt")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date takedAt;
+	
+	@Transient
+	private boolean isOverdue;
     
 	@Column(name = "title")
-	@Pattern(regexp = "[А-ЯЁ][а-яё]+")
     private String title;
     
 	@Column(name = "author")
@@ -35,6 +43,22 @@ public class Book {
 		this.title = title;
 		this.author = author;
 		this.year = year;
+	}
+
+	public Date getTakedAt() {
+		return takedAt;
+	}
+
+	public void setTakedAt(Date takedAt) {
+		this.takedAt = takedAt;
+	}
+
+	public boolean isOverdue() {
+		return isOverdue;
+	}
+
+	public void setOverdue(boolean isOverdue) {
+		this.isOverdue = isOverdue;
 	}
 
 	public Person getOwner() {

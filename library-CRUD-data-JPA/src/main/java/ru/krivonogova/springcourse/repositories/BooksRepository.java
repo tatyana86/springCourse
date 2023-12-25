@@ -8,5 +8,5 @@ import ru.krivonogova.springcourse.models.Book;
 
 @Repository
 public interface BooksRepository extends JpaRepository<Book, Integer>{
-	public List<Book> findByTitleStartingWith(String query);
+	List<Book> findByTitleStartingWith(String query);
 }
