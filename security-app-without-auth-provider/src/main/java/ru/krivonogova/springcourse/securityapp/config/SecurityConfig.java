@@ -42,8 +42,9 @@ public class SecurityConfig {
 		
         http.authenticationManager(authenticationManager)
         .authorizeHttpRequests((authz) -> authz
+        		.requestMatchers("/admin").hasRole("ADMIN")
                 .requestMatchers("/", "/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().hasAnyRole("USER", "ADMIN")
         );
 		
         http.formLogin((formLogin) ->

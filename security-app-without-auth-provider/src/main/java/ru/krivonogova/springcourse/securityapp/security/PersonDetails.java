@@ -1,8 +1,10 @@
 package ru.krivonogova.springcourse.securityapp.security;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import ru.krivonogova.springcourse.securityapp.models.Person;
@@ -14,10 +16,12 @@ public class PersonDetails implements UserDetails{
 		this.person = person;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // SHOW_ACCOUNT, WITHDRAW_MONEY, SEND_MONEY
+        // ROLE_ADMIN, ROLE_USER - это роли
+        return Collections.singletonList(new SimpleGrantedAuthority(person.getRole()));
+    }
 
 	@Override
 	public String getPassword() {
