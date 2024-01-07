@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.krivonogova.springcourse.RestApp.models.Person;
 import ru.krivonogova.springcourse.RestApp.repositories.PeopleRepository;
+import ru.krivonogova.springcourse.RestApp.util.PersonNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,6 +28,6 @@ public class PeopleService {
 
     public Person findOne(int id) {
         Optional<Person> foundPerson = peopleRepository.findById(id);
-        return foundPerson.orElse(null);
+        return foundPerson.orElseThrow(PersonNotFoundException::new);
     }
 }
