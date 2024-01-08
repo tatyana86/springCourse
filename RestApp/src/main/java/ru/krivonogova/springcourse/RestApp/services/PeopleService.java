@@ -1,5 +1,6 @@
 package ru.krivonogova.springcourse.RestApp.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,14 @@ public class PeopleService {
     
     @Transactional
     public void save(Person person) {
+    	enrichPerson(person);
+    	
     	peopleRepository.save(person);
     }
+    
+	private void enrichPerson(Person person) {
+		person.setCreatedAt(LocalDateTime.now());
+		person.setUpdatedAt(LocalDateTime.now());
+		person.setCreatedWho("ADMIN");
+	}
 }
