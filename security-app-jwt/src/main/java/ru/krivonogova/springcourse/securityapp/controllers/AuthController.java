@@ -5,6 +5,8 @@ import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import ru.krivonogova.springcourse.securityapp.dto.AuthenticationDTO;
 import ru.krivonogova.springcourse.securityapp.dto.PersonDTO;
 import ru.krivonogova.springcourse.securityapp.models.Person;
 import ru.krivonogova.springcourse.securityapp.security.JWTUtil;
@@ -42,16 +45,16 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-	@GetMapping("/login")
-	public String loginPage()
-	{
-		return "auth/login";
-	}
-	
-    @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("person") Person person) {
-        return "auth/registration";
-    }
+//	@GetMapping("/login")
+//	public String loginPage()
+//	{
+//		return "auth/login";
+//	}
+//	
+//    @GetMapping("/registration")
+//    public String registrationPage(@ModelAttribute("person") Person person) {
+//        return "auth/registration";
+//    }
     
     @PostMapping("/registration")
     public Map<String, String> performRegistration(@RequestBody @Valid PersonDTO personDTO,
@@ -72,5 +75,21 @@ public class AuthController {
     
     public Person convertToPerson(PersonDTO personDTO) {
         return this.modelMapper.map(personDTO, Person.class);
+    }
+    
+    @PostMapping("/login")
+    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
+        UsernamePasswordAuthenticationToken authInputToken =
+                new UsernamePasswordAuthenticationToken(authenticationDTO.getUsername(),
+                        authenticationDTO.getPassword());
+
+        try {
+            authenticationManager.authenticate(authInputToken);
+        } catch (BadCredentialsException e) {
+            return Map.of("message", "Incorrect credentials!");
+        }
+
+        String token = jwtUtil.generateToken(authenticationDTO.getUsername());
+        return Map.of("jwt-token", token);
     }
 }
